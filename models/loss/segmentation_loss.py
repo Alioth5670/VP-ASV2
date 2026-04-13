@@ -73,7 +73,6 @@ class FocalLoss(nn.Module):
 
         # If input already looks like probabilities, use it; otherwise apply softmax.
         if torch.all((logits >= 0) & (logits <= 1)):
-            print("Input looks like probabilities; using as-is.")
             probs = logits
         else:
             probs = torch.softmax(logits, dim=1).clamp(min=self.eps, max=1.0)
@@ -105,7 +104,7 @@ class SegmentationLoss(nn.Module):
         alpha: float | None = 0.0,
         gamma: float = 2.0,
         reduction: str = "mean",
-        multi_layer_reduction: str = "mean",
+        multi_layer_reduction: str = "sum",
     ) -> None:
         super().__init__()
         self.dice_weight = dice_weight

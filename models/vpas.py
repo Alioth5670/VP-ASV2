@@ -143,9 +143,7 @@ class VPAS(nn.Module):
             token_scores = self.discrepancy_filter(difference_tokens, layer_idx=i)
             token_probs = F.softmax(token_scores/0.07, dim=-1)
 
-            # Keep output in logit space for segmentation loss compatibility.
-            token_logits = torch.logit(token_probs.clamp(min=1e-6, max=1.0 - 1e-6))
-            logit_map = self._tokens_to_logit_map(token_logits, feat_h, feat_w)
+            logit_map = self._tokens_to_logit_map(token_probs, feat_h, feat_w)
 
             if logit_map.shape[-2:] != (query_h, query_w):
                 logit_map = F.interpolate(logit_map, size=(query_h, query_w), mode="bilinear", align_corners=False)
