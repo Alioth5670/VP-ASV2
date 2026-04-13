@@ -1,0 +1,11 @@
+*.pth
+*.pt
+dataset/
+logs/
+outputs/
+*.png
+*.jpg
+*.jpeg
+*.txt
+*.pyc
+*.log

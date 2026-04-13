@@ -1,0 +1,19 @@
+_base_: ./vpas_dinov3_vitb16.yaml
+
+experiment:
+  name: vpas_seg_test
+  output_dir: ./outputs/test_eval
+
+data:
+  test_json: dataset/MVTec-AD/test-train-top10pair-eb4-test.json
+  test_output_size: [512, 512]
+  num_workers: 4
+  persistent_workers: true
+  prefetch_factor: 8
+
+train:
+  batch_size: 1
+  amp: true
+
+inference:
+  threshold: 0.5

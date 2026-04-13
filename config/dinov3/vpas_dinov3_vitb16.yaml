@@ -1,0 +1,81 @@
+_base_: ../base.yaml
+
+experiment:
+  name: vpas_seg_hardalign
+  output_dir: ./outputs/test
+
+model:
+  name: vpas
+  num_layers: 3
+  layer_wise_neck: true
+  use_discrepancy_filter: true
+  prototype_mode: layerwise
+  mask_fusion_mode: add
+
+  backbone:
+    name: dinov3_vitb16
+    weights: ./models/backbone/dinov3/checkpoints/dinov3_vitb16_pretrain_lvd1689m-73cec8be.pth
+    interaction_indexes: [5, 8, 11]
+    freeze: true
+
+  neck:
+    name: farm
+    align_type: soft
+    res_type: abs_diff
+    dim: 768
+    ratio: 4.0
+    tau: 0.07
+
+data:
+  train_json: dataset/coco-inpainted/train/train.json
+  val_json: dataset/coco-inpainted/train/val.json
+  test_json: ''
+
+transform:
+  prompt:
+    jitter_p: 0.5
+    brightness: 0.125
+    contrast: 0.5
+    saturation: 0.5
+    hue: 0.08
+    noise_std: 0.02
+    noise_p: 0.0
+    blur_p: 0.0
+    blur_kernel: 3
+    rot_deg: 3.0
+    rot_p: 0.3
+
+  query:
+    jitter_p: 0.5
+    brightness: 0.125
+    contrast: 0.5
+    saturation: 0.5
+    hue: 0.08
+    noise_std: 0.02
+    noise_p: 0.3
+    blur_p: 0.1
+    blur_kernel: 3
+    rot_deg: 3.0
+    rot_p: 0.3
+
+  geo:
+    crop_size: null
+    hflip_p: 0.5
+    affine_p: 0.3
+    affine_degrees: 5.0
+    affine_translate: [0.02, 0.02]
+    affine_scale: [0.98, 1.02]
+    affine_shear: 2.0
+
+  val:
+    geo: {}
+
+local_change_aug:
+  enabled: true
+  anomaly_source_path: ./dataset/dtd/images
+  resize_shape: null
+  perlin_scale: 6
+  min_perlin_scale: 0
+  mask_threshold: 0.5
+  no_anomaly_prob: 0.5
+  blend_beta_max: 0.8

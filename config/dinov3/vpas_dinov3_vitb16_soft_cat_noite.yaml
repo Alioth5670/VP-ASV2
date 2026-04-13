@@ -1,0 +1,13 @@
+_base_: ../base.yaml
+
+experiment:
+  name: vpas_seg_hardalign
+  output_dir: ./outputs/test
+
+model:
+  name: vpas
+  num_layers: 3
+  layer_wise_neck: true
+  use_discrepancy_filter: true
+  prototype_mode: layerwise
+  mask_fusion_mode: add
